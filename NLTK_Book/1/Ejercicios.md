@@ -1,5 +1,210 @@
 # Ejercicios NLTK Book - Capítulo 1
 
+## Ejemplos del libro NLTK Book
+### 1.1 Getting started with Python
+```python
+# Entrada
+ 1 + 5 * 2 - 3
+```
+
+```python
+# Salida
+8
+```
+
+### 1.2 Getting Started with NLTK
+```python
+# Descarga del corpus NLTK Book
+import nltk
+nltk.download('book')
+```
+
+```python
+# Importación de textos del NLTK Book
+from nltk.book import *
+```
+
+```python
+# Salida
+*** Introductory Examples for the NLTK Book ***
+Loading text1, ..., text9 and sent1, ..., sent9
+Type the name of the text or sentence to view it.
+Type: 'texts()' or 'sents()' to list the materials.
+text1: Moby Dick by Herman Melville 1851
+text2: Sense and Sensibility by Jane Austen 1811
+text3: The Book of Genesis
+text4: Inaugural Address Corpus
+text5: Chat Corpus
+text6: Monty Python and the Holy Grail
+text7: Wall Street Journal
+text8: Personals Corpus
+text9: The Man Who Was Thursday by G . K . Chesterton 1908
+```
+
+```python
+# Seleccion de corpus
+text1
+<Text: Moby Dick by Herman Melville 1851>
+text2
+<Text: Sense and Sensibility by Jane Austen 1811>
+```
+
+### 1.3 Searching text
+```python
+text1.concordance("monstrous")
+```
+```python
+Displaying 11 of 11 matches:
+ong the former , one was of a most monstrous size . ... This came towards us ,
+ON OF THE PSALMS . " Touching that monstrous bulk of the whale or ork we have r
+ll over with a heathenish array of monstrous clubs and spears . Some were thick
+d as you gazed , and wondered what monstrous cannibal and savage could ever hav
+that has survived the flood ; most monstrous and most mountainous ! That Himmal
+they might scout at Moby Dick as a monstrous fable , or still worse and more de
+th of Radney .'" CHAPTER 55 Of the monstrous Pictures of Whales . I shall ere l
+ing Scenes . In connexion with the monstrous pictures of whales , I am strongly
+ere to enter upon those still more monstrous stories of them which are to be fo
+ght have been rummaged out of this monstrous cabinet there is no telling . But
+of Whale - Bones ; for Whales of a monstrous size are oftentimes cast up dead u
+```
+
+```python
+# Entradas
+text1.similar("monstrous")
+text2.similar("monstrous")
+```
+```python
+# Salidas
+mean part maddens doleful gamesome subtly uncommon careful untoward
+exasperate loving passing mouldy christian few true mystifying
+imperial modifies contemptible
+
+very heartily so exceedingly remarkably as vast a great amazingly
+extremely good sweet
+```
+```python
+# Entrada
+text2.common_contexts(["monstrous", "very"])
+```
+```python
+# Salida
+a_pretty is_pretty am_glad be_glad a_lucky
+```
+
+```python
+# Entrada
+text3.generate()
+```
+```python
+# Salida
+Building ngram index...
+laid by her , and said unto Cain , Where art thou , and said , Go to ,
+I will not do it for ten ' s sons ; we dreamed each man according to
+their generatio the firstborn said unto Laban , Because I said , Nay ,
+but Sarah shall her name be . , duke Elah , duke Shobal , and Akan .
+and looked upon my affliction . Bashemath Ishmael ' s blood , but Isra
+for as a prince hast thou found of all the cattle in the valley , and
+the wo The
+"laid by her , and said unto Cain , Where art thou , and said , Go to ,\nI will not do it for ten ' s sons ; we dreamed each man according to\ntheir generatio the firstborn said unto Laban , Because I said , Nay ,\nbut Sarah shall her name be . , duke Elah , duke Shobal , and Akan .\nand looked upon my affliction . Bashemath Ishmael ' s blood , but Isra\nfor as a prince hast thou found of all the cattle in the valley , and\nthe wo The"
+```
+
+### 1.4 Counting vocabulary
+```python
+# Entrada
+len(text3)
+```
+
+```python
+# Salida
+44764
+```
+```python
+# Entrada
+sorted(set(text3))
+```
+
+```python
+# Salida
+['!', "'", '(', ')', ',', ',)', '.', '.)', ':', ';', ';)', '?', '?)', 'A', 'Abel', 'Abelmizraim', 'Abidah', 'Abide', 'Abimael', 'Abimelech', 'Abr', 'Abrah', 'Abraham', 'Abram', 'Accad', 'Achbor', 'Adah', 'Adam', 'Adbeel', 'Admah', 'Adullamite', 'After', 'Aholibamah', 'Ahuzzath', 'Ajah', 'Akan', 'All', 'Allonbachuth', 'Almighty', 'Almodad', 'Also', 'Alvah', 'Alvan', 'Am', 'Amal', 'Amalek', 'Amalekites', 'Ammon', 'Amorite', 'Amorites', 'Amraphel', 'An', 'Anah', 'Anamim', 'And', 'Aner', 'Angel', 'Appoint', 'Aram', 'Aran', 'Ararat', 'Arbah', 'Ard', 'Are', 'Areli', 'Arioch', 'Arise', 'Arkite', 'Arodi', 'Arphaxad', 'Art', 'Arvadite', 'As', 'Asenath', 'Ashbel', 'Asher', 'Ashkenaz', 'Ashteroth', 'Ask', 'Asshur', 'Asshurim', 'Assyr', 'Assyria', 'At', 'Atad', 'Avith', 'Baalhanan', 'Babel', 'Bashemath', 'Be', 'Because', 'Becher', 'Bedad', 'Beeri', 'Beerlahairoi', 'Beersheba', 'Behold', 'Bela', 'Belah', 'Benam', 'Benjamin', 'Beno', 'Beor', 'Bera', 'Bered', 'Beriah', 'Bethel', 'Bethlehem', 'Bethuel', 'Beware', 'Bilhah', 'Bilhan', 'Binding', 'Birsha', 'Bless', 'Blessed', 'Both', 'Bow', 'Bozrah', 'Bring', 'But', 'Buz', 'By', 'Cain', 'Cainan', 'Calah', 'Calneh', 'Can', 'Cana', 'Canaan', 'Canaanite', 'Canaanites', 'Canaanitish', 'Caphtorim', 'Carmi', 'Casluhim', 'Cast', 'Cause', 'Chaldees', 'Chedorlaomer', 'Cheran', 'Cherubims', 'Chesed', 'Chezib', 'Come', 'Cursed', 'Cush', 'Damascus', 'Dan', 'Day', 'Deborah', 'Dedan', 'Deliver', 'Diklah', 'Din', 'Dinah', 'Dinhabah', 'Discern', 'Dishan', 'Dishon', 'Do', 'Dodanim', 'Dothan', 'Drink', 'Duke', 'Dumah', 'Earth', 'Ebal', 'Eber', 'Edar', 'Eden', 'Edom', 'Edomites', 'Egy', 'Egypt', 'Egyptia', 'Egyptian', 'Egyptians', 'Ehi', 'Elah', 'Elam', 'Elbethel', 'Eldaah', 'EleloheIsrael', 'Eliezer', 'Eliphaz', 'Elishah', 'Ellasar', 'Elon', 'Elparan', 'Emins', 'En', 'Enmishpat', 'Eno', 'Enoch', 'Enos', 'Ephah', 'Epher', 'Ephra', 'Ephraim', 'Ephrath', 'Ephron', 'Er', 'Erech', 'Eri', 'Es', 'Esau', 'Escape', 'Esek', 'Eshban', 'Eshcol', 'Ethiopia', 'Euphrat', 'Euphrates', 'Eve', 'Even', 'Every', 'Except', 'Ezbon', 'Ezer', 'Fear', 'Feed', 'Fifteen', 'Fill', 'For', 'Forasmuch', 'Forgive', 'From', 'Fulfil', 'G', 'Gad', 'Gaham', 'Galeed', 'Gatam', 'Gather', 'Gaza', 'Gentiles', 'Gera', 'Gerar', 'Gershon', 'Get', 'Gether', 'Gihon', 'Gilead', 'Girgashites', 'Girgasite', 'Give', 'Go', 'God', 'Gomer', 'Gomorrah', 'Goshen', 'Guni', 'Hadad', 'Hadar', 'Hadoram', 'Hagar', 'Haggi', 'Hai', 'Ham', 'Hamathite', 'Hamor', 'Hamul', 'Hanoch', 'Happy', 'Haran', 'Hast', 'Haste', 'Have', 'Havilah', 'Hazarmaveth', 'Hazezontamar', 'Hazo', 'He', 'Hear', 'Heaven', 'Heber', 'Hebrew', 'Hebrews', 'Hebron', 'Hemam', 'Hemdan', 'Here', 'Hereby', 'Heth', 'Hezron', 'Hiddekel', 'Hinder', 'Hirah', 'His', 'Hitti', 'Hittite', 'Hittites', 'Hivite', 'Hobah', 'Hori', 'Horite', 'Horites', 'How', 'Hul', 'Huppim', 'Husham', 'Hushim', 'Huz', 'I', 'If', 'In', 'Irad', 'Iram', 'Is', 'Isa', 'Isaac', 'Iscah', 'Ishbak', 'Ishmael', 'Ishmeelites', 'Ishuah', 'Isra', 'Israel', 'Issachar', 'Isui', 'It', 'Ithran', 'Jaalam', 'Jabal', 'Jabbok', 'Jac', 'Jachin', 'Jacob', 'Jahleel', 'Jahzeel', 'Jamin', 'Japhe', 'Japheth', 'Jared', 'Javan', 'Jebusite', 'Jebusites', 'Jegarsahadutha', 'Jehovahjireh', 'Jemuel', 'Jerah', 'Jetheth', 'Jetur', 'Jeush', 'Jezer', 'Jidlaph', 'Jimnah', 'Job', 'Jobab', 'Jokshan', 'Joktan', 'Jordan', 'Joseph', 'Jubal', 'Judah', 'Judge', 'Judith', 'Kadesh', 'Kadmonites', 'Karnaim', 'Kedar', 'Kedemah', 'Kemuel', 'Kenaz', 'Kenites', 'Kenizzites', 'Keturah', 'Kiriathaim', 'Kirjatharba', 'Kittim', 'Know', 'Kohath', 'Kor', 'Korah', 'LO', 'LORD', 'Laban', 'Lahairoi', 'Lamech', 'Lasha', 'Lay', 'Leah', 'Lehabim', 'Lest', 'Let', 'Letushim', 'Leummim', 'Levi', 'Lie', 'Lift', 'Lo', 'Look', 'Lot', 'Lotan', 'Lud', 'Ludim', 'Luz', 'Maachah', 'Machir', 'Machpelah', 'Madai', 'Magdiel', 'Magog', 'Mahalaleel', 'Mahalath', 'Mahanaim', 'Make', 'Malchiel', 'Male', 'Mam', 'Mamre', 'Man', 'Manahath', 'Manass', 'Manasseh', 'Mash', 'Masrekah', 'Massa', 'Matred', 'Me', 'Medan', 'Mehetabel', 'Mehujael', 'Melchizedek', 'Merari', 'Mesha', 'Meshech', 'Mesopotamia', 'Methusa', 'Methusael', 'Methuselah', 'Mezahab', 'Mibsam', 'Mibzar', 'Midian', 'Midianites', 'Milcah', 'Mishma', 'Mizpah', 'Mizraim', 'Mizz', 'Moab', 'Moabites', 'Moreh', 'Moreover', 'Moriah', 'Muppim', 'My', 'Naamah', 'Naaman', 'Nahath', 'Nahor', 'Naphish', 'Naphtali', 'Naphtuhim', 'Nay', 'Nebajoth', 'Neither', 'Night', 'Nimrod', 'Nineveh', 'Noah', 'Nod', 'Not', 'Now', 'O', 'Obal', 'Of', 'Oh', 'Ohad', 'Omar', 'On', 'Onam', 'Onan', 'Only', 'Ophir', 'Our', 'Out', 'Padan', 'Padanaram', 'Paran', 'Pass', 'Pathrusim', 'Pau', 'Peace', 'Peleg', 'Peniel', 'Penuel', 'Peradventure', 'Perizzit', 'Perizzite', 'Perizzites', 'Phallu', 'Phara', 'Pharaoh', 'Pharez', 'Phichol', 'Philistim', 'Philistines', 'Phut', 'Phuvah', 'Pildash', 'Pinon', 'Pison', 'Potiphar', 'Potipherah', 'Put', 'Raamah', 'Rachel', 'Rameses', 'Rebek', 'Rebekah', 'Rehoboth', 'Remain', 'Rephaims', 'Resen', 'Return', 'Reu', 'Reub', 'Reuben', 'Reuel', 'Reumah', 'Riphath', 'Rosh', 'Sabtah', 'Sabtech', 'Said', 'Salah', 'Salem', 'Samlah', 'Sarah', 'Sarai', 'Saul', 'Save', 'Say', 'Se', 'Seba', 'See', 'Seeing', 'Seir', 'Sell', 'Send', 'Sephar', 'Serah', 'Sered', 'Serug', 'Set', 'Seth', 'Shalem', 'Shall', 'Shalt', 'Shammah', 'Shaul', 'Shaveh', 'She', 'Sheba', 'Shebah', 'Shechem', 'Shed', 'Shel', 'Shelah', 'Sheleph', 'Shem', 'Shemeber', 'Shepho', 'Shillem', 'Shiloh', 'Shimron', 'Shinab', 'Shinar', 'Shobal', 'Should', 'Shuah', 'Shuni', 'Shur', 'Sichem', 'Siddim', 'Sidon', 'Simeon', 'Sinite', 'Sitnah', 'Slay', 'So', 'Sod', 'Sodom', 'Sojourn', 'Some', 'Spake', 'Speak', 'Spirit', 'Stand', 'Succoth', 'Surely', 'Swear', 'Syrian', 'Take', 'Tamar', 'Tarshish', 'Tebah', 'Tell', 'Tema', 'Teman', 'Temani', 'Terah', 'Thahash', 'That', 'The', 'Then', 'There', 'Therefore', 'These', 'They', 'Thirty', 'This', 'Thorns', 'Thou', 'Thus', 'Thy', 'Tidal', 'Timna', 'Timnah', 'Timnath', 'Tiras', 'To', 'Togarmah', 'Tola', 'Tubal', 'Tubalcain', 'Twelve', 'Two', 'Unstable', 'Until', 'Unto', 'Up', 'Upon', 'Ur', 'Uz', 'Uzal', 'We', 'What', 'When', 'Whence', 'Where', 'Whereas', 'Wherefore', 'Which', 'While', 'Who', 'Whose', 'Whoso', 'Why', 'Wilt', 'With', 'Woman', 'Ye', 'Yea', 'Yet', 'Zaavan', 'Zaphnathpaaneah', 'Zar', 'Zarah', 'Zeboiim', 'Zeboim', 'Zebul', 'Zebulun', 'Zemarite', 'Zepho', 'Zerah', 'Zibeon', 'Zidon', 'Zillah', 'Zilpah', 'Zimran', 'Ziphion', 'Zo', 'Zoar', 'Zohar', 'Zuzims', 'a', 'abated', 'abide', 'able', 'abode', 'abomination', 'about', 'above', 'abroad', 'absent', 'abundantly', 'accept', 'accepted', 'according', 'acknowledged', 'activity', 'add', 'adder', 'afar', 'afflict', 'affliction', 'afraid', 'after', 'afterward', 'afterwards', 'aga', 'again', 'against', 'age', 'aileth', 'air', 'al', 'alive', 'all', 'almon', 'alo', 'alone', 'aloud', 'also', 'altar', 'altogether', 'always', 'am', 'among', 'amongst', 'an', 'and', 'angel', 'angels', 'anger', 'angry', 'anguish', 'anointedst', 'anoth', 'another', 'answer', 'answered', 'any', 'anything', 'appe', 'appear', 'appeared', 'appease', 'appoint', 'appointed', 'aprons', 'archer', 'archers', 'are', 'arise', 'ark', 'armed', 'arms', 'army', 'arose', 'arrayed', 'art', 'artificer', 'as', 'ascending', 'ash', 'ashamed', 'ask', 'asked', 'asketh', 'ass', 'assembly', 'asses', 'assigned', 'asswaged', 'at', 'attained', 'audience', 'avenged', 'aw', 'awaked', 'away', 'awoke', 'back', 'backward', 'bad', 'bade', 'badest', 'badne', 'bak', 'bake', 'bakemeats', 'baker', 'bakers', 'balm', 'bands', 'bank', 'bare', 'barr', 'barren', 'basket', 'baskets', 'battle', 'bdellium', 'be', 'bear', 'beari', 'bearing', 'beast', 'beasts', 'beautiful', 'became', 'because', 'become', 'bed', 'been', 'befall', 'befell', 'before', 'began', 'begat', 'beget', 'begettest', 'begin', 'beginning', 'begotten', 'beguiled', 'beheld', 'behind', 'behold', 'being', 'believed', 'belly', 'belong', 'beneath', 'bereaved', 'beside', 'besides', 'besought', 'best', 'betimes', 'better', 'between', 'betwixt', 'beyond', 'binding', 'bird', 'birds', 'birthday', 'birthright', 'biteth', 'bitter', 'blame', 'blameless', 'blasted', 'bless', 'blessed', 'blesseth', 'blessi', 'blessing', 'blessings', 'blindness', 'blood', 'blossoms', 'bodies', 'boldly', 'bondman', 'bondmen', 'bondwoman', 'bone', 'bones', 'book', 'booths', 'border', 'borders', 'born', 'bosom', 'both', 'bottle', 'bou', 'boug', 'bough', 'bought', 'bound', 'bow', 'bowed', 'bowels', 'bowing', 'boys', 'bracelets', 'branches', 'brass', 'bre', 'breach', 'bread', 'breadth', 'break', 'breaketh', 'breaking', 'breasts', 'breath', 'breathed', 'breed', 'brethren', 'brick', 'brimstone', 'bring', 'brink', 'broken', 'brook', 'broth', 'brother', 'brought', 'brown', 'bruise', 'budded', 'build', 'builded', 'built', 'bulls', 'bundle', 'bundles', 'burdens', 'buried', 'burn', 'burning', 'burnt', 'bury', 'buryingplace', 'business', 'but', 'butler', 'butlers', 'butlership', 'butter', 'buy', 'by', 'cakes', 'calf', 'call', 'called', 'came', 'camel', 'camels', 'camest', 'can', 'cannot', 'canst', 'captain', 'captive', 'captives', 'carcases', 'carried', 'carry', 'cast', 'castles', 'catt', 'cattle', 'caught', 'cause', 'caused', 'cave', 'cease', 'ceased', 'certain', 'certainly', 'chain', 'chamber', 'change', 'changed', 'changes', 'charge', 'charged', 'chariot', 'chariots', 'chesnut', 'chi', 'chief', 'child', 'childless', 'childr', 'children', 'chode', 'choice', 'chose', 'circumcis', 'circumcise', 'circumcised', 'citi', 'cities', 'city', 'clave', 'clean', 'clear', 'cleave', 'clo', 'closed', 'clothed', 'clothes', 'cloud', 'clusters', 'co', 'coat', 'coats', 'coffin', 'cold', 'colours', 'colt', 'colts', 'come', 'comest', 'cometh', 'comfort', 'comforted', 'comi', 'coming', 'command', 'commanded', 'commanding', 'commandment', 'commandments', 'commended', 'committed', 'commune', 'communed', 'communing', 'company', 'compassed', 'compasseth', 'conceal', 'conceive', 'conceived', 'conception', 'concerning', 'concubi', 'concubine', 'concubines', 'confederate', 'confound', 'consent', 'conspired', 'consume', 'consumed', 'content', 'continually', 'continued', 'cool', 'corn', 'corrupt', 'corrupted', 'couch', 'couched', 'couching', 'could', 'counted', 'countenance', 'countries', 'country', 'covenant', 'covered', 'covering', 'created', 'creature', 'creepeth', 'creeping', 'cried', 'crieth', 'crown', 'cru', 'cruelty', 'cry', 'cubit', 'cubits', 'cunning', 'cup', 'current', 'curse', 'cursed', 'curseth', 'custom', 'cut', 'd', 'da', 'dainties', 'dale', 'damsel', 'damsels', 'dark', 'darkne', 'darkness', 'daughers', 'daught', 'daughte', 'daughter', 'daughters', 'day', 'days', 'dea', 'dead', 'deal', 'dealt', 'dearth', 'death', 'deceitfully', 'deceived', 'deceiver', 'declare', 'decreased', 'deed', 'deeds', 'deep', 'deferred', 'defiled', 'defiledst', 'delight', 'deliver', 'deliverance', 'delivered', 'denied', 'depart', 'departed', 'departing', 'deprived', 'descending', 'desire', 'desired', 'desolate', 'despised', 'destitute', 'destroy', 'destroyed', 'devour', 'devoured', 'dew', 'did', 'didst', 'die', 'died', 'digged', 'dignity', 'dim', 'dine', 'dipped', 'direct', 'discern', 'discerned', 'discreet', 'displease', 'displeased', 'distress', 'distressed', 'divide', 'divided', 'divine', 'divineth', 'do', 'doe', 'doer', 'doest', 'doeth', 'doing', 'dominion', 'done', 'door', 'dost', 'doth', 'double', 'doubled', 'doubt', 'dove', 'down', 'dowry', 'drank', 'draw', 'dread', 'dreadful', 'dream', 'dreamed', 'dreamer', 'dreams', 'dress', 'dressed', 'drew', 'dried', 'drink', 'drinketh', 'drinking', 'driven', 'drought', 'drove', 'droves', 'drunken', 'dry', 'duke', 'dukes', 'dunge', 'dungeon', 'dust', 'dwe', 'dwell', 'dwelled', 'dwelling', 'dwelt', 'e', 'ea', 'each', 'ear', 'earing', 'early', 'earring', 'earrings', 'ears', 'earth', 'east', 'eastward', 'eat', 'eaten', 'eatest', 'edge', 'eight', 'eighteen', 'eighty', 'either', 'elder', 'elders', 'eldest', 'eleven', 'else', 'embalm', 'embalmed', 'embraced', 'emptied', 'empty', 'end', 'ended', 'endued', 'endure', 'enemies', 'enlarge', 'enmity', 'enough', 'enquire', 'enter', 'entered', 'entreated', 'envied', 'erected', 'errand', 'escape', 'escaped', 'espied', 'establish', 'established', 'ev', 'even', 'evening', 'eventide', 'ever', 'everlasting', 'every', 'evil', 'ewe', 'ewes', 'exceeding', 'exceedingly', 'excel', 'excellency', 'except', 'exchange', 'experience', 'ey', 'eyed', 'eyes', 'fa', 'face', 'faces', 'fai', 'fail', 'failed', 'faileth', 'fainted', 'fair', 'fall', 'fallen', 'falsely', 'fame', 'families', 'famine', 'famished', 'far', 'fashion', 'fast', 'fat', 'fatfleshed', 'fath', 'fathe', 'father', 'fathers', 'fatness', 'faults', 'favour', 'favoured', 'fear', 'feared', 'fearest', 'feast', 'fed', 'feeble', 'feebler', 'feed', 'feeding', 'feel', 'feet', 'fell', 'fellow', 'felt', 'fema', 'female', 'fetch', 'fetched', 'fetcht', 'few', 'fie', 'field', 'fierce', 'fifteen', 'fifth', 'fifty', 'fig', 'fill', 'filled', 'find', 'findest', 'findeth', 'finding', 'fine', 'finish', 'finished', 'fir', 'fire', 'firmame', 'firmament', 'first', 'firstborn', 'firstlings', 'fish', 'fishes', 'five', 'flaming', 'fle', 'fled', 'fleddest', 'flee', 'flesh', 'flo', 'floc', 'flock', 'flocks', 'flood', 'floor', 'fly', 'fo', 'foal', 'foals', 'folk', 'follow', 'followed', 'following', 'folly', 'food', 'foolishly', 'foot', 'for', 'forbid', 'force', 'ford', 'foremost', 'foreskin', 'forgat', 'forget', 'forgive', 'forgotten', 'form', 'formed', 'former', 'forth', 'forty', 'forward', 'fou', 'found', 'fountain', 'fountains', 'four', 'fourscore', 'fourteen', 'fourteenth', 'fourth', 'fowl', 'fowls', 'freely', 'friend', 'friends', 'fro', 'from', 'frost', 'fruit', 'fruitful', 'fruits', 'fugitive', 'fulfilled', 'full', 'furnace', 'furniture', 'fury', 'gard', 'garden', 'garmen', 'garment', 'garments', 'gat', 'gate', 'gather', 'gathered', 'gathering', 'gave', 'gavest', 'generatio', 'generation', 'generations', 'get', 'getting', 'ghost', 'giants', 'gift', 'gifts', 'give', 'given', 'giveth', 'giving', 'glory', 'go', 'goa', 'goat', 'goats', 'gods', 'goest', 'goeth', 'going', 'gold', 'golden', 'gone', 'good', 'goodly', 'goods', 'gopher', 'got', 'gotten', 'governor', 'gr', 'grace', 'gracious', 'graciously', 'grap', 'grapes', 'grass', 'grave', 'gray', 'gre', 'great', 'greater', 'greatly', 'green', 'grew', 'grief', 'grieved', 'grievous', 'grisl', 'grisled', 'gro', 'ground', 'grove', 'grow', 'grown', 'guard', 'guiding', 'guiltiness', 'guilty', 'gutters', 'h', 'ha', 'habitations', 'had', 'hadst', 'hairs', 'hairy', 'half', 'halted', 'han', 'hand', 'handfuls', 'handle', 'handmaid', 'handmaidens', 'handmaids', 'hands', 'hang', 'hanged', 'hard', 'hardly', 'harlot', 'harm', 'harp', 'harvest', 'hast', 'haste', 'hasted', 'hastened', 'hastily', 'hate', 'hated', 'hath', 'have', 'haven', 'having', 'hazel', 'he', 'head', 'heads', 'healed', 'health', 'heap', 'hear', 'heard', 'hearken', 'hearkened', 'heart', 'hearth', 'hearts', 'heat', 'heav', 'heaven', 'heavens', 'heed', 'heel', 'heels', 'heifer', 'height', 'heir', 'held', 'help', 'hence', 'henceforth', 'her', 'herb', 'herd', 'herdmen', 'herds', 'here', 'herein', 'herself', 'hid', 'hide', 'high', 'hil', 'hills', 'him', 'himself', 'hind', 'hindermost', 'hire', 'hired', 'his', 'hith', 'hither', 'hold', 'hollow', 'home', 'honey', 'honour', 'honourable', 'hor', 'horror', 'horse', 'horsemen', 'horses', 'host', 'hotly', 'hou', 'hous', 'house', 'household', 'households', 'how', 'hundred', 'hundredfo', 'hundredth', 'hunt', 'hunter', 'hunting', 'hurt', 'husba', 'husband', 'husbandman', 'if', 'ill', 'image', 'images', 'imagination', 'imagined', 'in', 'increase', 'increased', 'indeed', 'inhabitants', 'inhabited', 'inherit', 'inheritance', 'iniquity', 'inn', 'innocency', 'instead', 'instructor', 'instruments', 'integrity', 'interpret', 'interpretation', 'interpretations', 'interpreted', 'interpreter', 'into', 'intreat', 'intreated', 'ir', 'is', 'isles', 'issue', 'it', 'itself', 'jewels', 'joined', 'joint', 'journey', 'journeyed', 'journeys', 'jud', 'judge', 'judged', 'judgment', 'just', 'justice', 'keep', 'keeper', 'kept', 'ki', 'kid', 'kids', 'kill', 'killed', 'kind', 'kindled', 'kindly', 'kindness', 'kindred', 'kinds', 'kine', 'king', 'kingdom', 'kings', 'kiss', 'kissed', 'kn', 'knead', 'kneel', 'knees', 'knew', 'knife', 'know', 'knowest', 'knoweth', 'knowing', 'knowledge', 'known', 'la', 'labour', 'lack', 'lad', 'ladder', 'lade', 'laded', 'laden', 'lads', 'laid', 'lamb', 'lambs', 'lamentati', 'lamp', 'lan', 'land', 'lands', 'language', 'large', 'last', 'laugh', 'laughed', 'law', 'lawgiver', 'laws', 'lay', 'lead', 'leaf', 'lean', 'leanfleshed', 'leap', 'leaped', 'learned', 'least', 'leave', 'leaves', 'led', 'left', 'length', 'lentiles', 'lesser', 'lest', 'let', 'li', 'lie', 'lien', 'liest', 'lieth', 'life', 'lift', 'lifted', 'light', 'lighted', 'lightly', 'lights', 'like', 'likene', 'likeness', 'linen', 'lingered', 'lion', 'little', 'live', 'lived', 'lives', 'liveth', 'living', 'lo', 'lodge', 'lodged', 'loins', 'long', 'longedst', 'longeth', 'look', 'looked', 'loose', 'lord', 'lords', 'loss', 'loud', 'love', 'loved', 'lovest', 'loveth', 'lower', 'lying', 'm', 'ma', 'made', 'magicians', 'magnified', 'maid', 'maiden', 'maidservants', 'make', 'male', 'males', 'man', 'mandrakes', 'manner', 'many', 'mark', 'marriages', 'married', 'marry', 'marvelled', 'mast', 'master', 'matter', 'may', 'mayest', 'me', 'mead', 'meadow', 'meal', 'mean', 'meanest', 'meant', 'measures', 'meat', 'meditate', 'meet', 'meeteth', 'men', 'menservants', 'mention', 'merchant', 'merchantmen', 'mercies', 'merciful', 'mercy', 'merry', 'mess', 'messenger', 'messengers', 'messes', 'met', 'mi', 'midst', 'midwife', 'might', 'mightier', 'mighty', 'milch', 'milk', 'millions', 'mind', 'mine', 'mirth', 'mischief', 'mist', 'mistress', 'mock', 'mocked', 'mocking', 'money', 'month', 'months', 'moon', 'more', 'moreover', 'morever', 'morning', 'morrow', 'morsel', 'morter', 'most', 'mother', 'mou', 'mount', 'mountain', 'mountains', 'mourn', 'mourned', 'mourning', 'mouth', 'mouths', 'moved', 'moveth', 'moving', 'much', 'mules', 'multiplied', 'multiply', 'multiplying', 'multitude', 'must', 'my', 'myrrh', 'myself', 'n', 'na', 'naked', 'nakedness', 'name', 'named', 'names', 'nati', 'natio', 'nation', 'nations', 'nativity', 'ne', 'near', 'neck', 'needeth', 'needs', 'neither', 'never', 'next', 'nig', 'nigh', 'night', 'nights', 'nine', 'nineteen', 'ninety', 'no', 'none', 'noon', 'nor', 'north', 'northward', 'nostrils', 'not', 'nothing', 'nought', 'nourish', 'nourished', 'now', 'number', 'numbered', 'numbering', 'nurse', 'nuts', 'o', 'oa', 'oak', 'oath', 'obeisance', 'obey', 'obeyed', 'observed', 'obtain', 'occasion', 'occupation', 'of', 'off', 'offended', 'offer', 'offered', 'offeri', 'offering', 'offerings', 'office', 'officer', 'officers', 'oil', 'old', 'olive', 'on', 'one', 'ones', 'only', 'onyx', 'open', 'opened', 'openly', 'or', 'order', 'organ', 'oth', 'other', 'ou', 'ought', 'our', 'ours', 'ourselves', 'out', 'over', 'overcome', 'overdrive', 'overseer', 'oversig', 'overspread', 'overtake', 'overthrew', 'overthrow', 'overtook', 'own', 'oxen', 'parcel', 'part', 'parted', 'parts', 'pass', 'passed', 'past', 'pasture', 'path', 'pea', 'peace', 'peaceable', 'peaceably', 'peop', 'people', 'peradventure', 'perceived', 'perfect', 'perform', 'perish', 'perpetual', 'person', 'persons', 'physicians', 'piece', 'pieces', 'pigeon', 'pilgrimage', 'pillar', 'pilled', 'pillows', 'pit', 'pitch', 'pitched', 'pitcher', 'pla', 'place', 'placed', 'places', 'plagued', 'plagues', 'plain', 'plains', 'plant', 'planted', 'played', 'pleasant', 'pleased', 'pleaseth', 'pleasure', 'pledge', 'plenteous', 'plenteousness', 'plenty', 'pluckt', 'point', 'poor', 'poplar', 'portion', 'possess', 'possessi', 'possession', 'possessions', 'possessor', 'posterity', 'pottage', 'poured', 'poverty', 'pow', 'power', 'praise', 'pray', 'prayed', 'precious', 'prepared', 'presence', 'present', 'presented', 'preserve', 'preserved', 'pressed', 'prevail', 'prevailed', 'prey', 'priest', 'priests', 'prince', 'princes', 'pris', 'prison', 'prisoners', 'proceedeth', 'process', 'profit', 'progenitors', 'prophet', 'prosper', 'prospered', 'prosperous', 'protest', 'proved', 'provender', 'provide', 'provision', 'pulled', 'punishment', 'purchase', 'purchased', 'purposing', 'pursue', 'pursued', 'put', 'putting', 'quart', 'quickly', 'quite', 'quiver', 'raiment', 'rain', 'rained', 'raise', 'ram', 'rams', 'ran', 'rank', 'raven', 'ravin', 'reach', 'reached', 'ready', 'reason', 'rebelled', 'rebuked', 'receive', 'received', 'red', 'redeemed', 'refrain', 'refrained', 'refused', 'regard', 'reign', 'reigned', 'remained', 'remaineth', 'remember', 'remembered', 'remove', 'removed', 'removing', 'renown', 'rent', 'repented', 'repenteth', 'replenish', 'report', 'reproa', 'reproach', 'reproved', 'require', 'required', 'requite', 'reserved', 'respect', 'rest', 'rested', 'restore', 'restored', 'restrained', 'return', 'returned', 'reviv', 'reward', 'rewarded', 'ri', 'rib', 'ribs', 'rich', 'riches', 'rid', 'ride', 'rider', 'right', 'righteous', 'righteousness', 'rightly', 'ring', 'ringstraked', 'ripe', 'rise', 'risen', 'riv', 'river', 'rode', 'rods', 'roll', 'rolled', 'roof', 'room', 'rooms', 'rose', 'roughly', 'round', 'rouse', 'royal', 'rul', 'rule', 'ruled', 'ruler', 'rulers', 'run', 's', 'sa', 'sac', 'sack', 'sackcloth', 'sacks', 'sacrifice', 'sacrifices', 'sad', 'saddled', 'sadly', 'said', 'saidst', 'saith', 'sake', 'sakes', 'salt', 'salvation', 'same', 'sanctified', 'sand', 'sat', 'save', 'saved', 'saving', 'savour', 'savoury', 'saw', 'sawest', 'say', 'saying', 'scarce', 'scarlet', 'scatter', 'scattered', 'sceptre', 'sea', 'searched', 'seas', 'season', 'seasons', 'second', 'secret', 'secretly', 'see', 'seed', 'seedtime', 'seeing', 'seek', 'seekest', 'seem', 'seemed', 'seen', 'seest', 'seeth', 'selfsame', 'selfwill', 'sell', 'send', 'sent', 'separate', 'separated', 'sepulchre', 'sepulchres', 'serpent', 'serva', 'servan', 'servant', 'servants', 'serve', 'served', 'service', 'set', 'seven', 'sevenfold', 'sevens', 'seventeen', 'seventeenth', 'seventh', 'seventy', 'sewed', 'sh', 'shadow', 'shall', 'shalt', 'shamed', 'shaved', 'she', 'sheaf', 'shear', 'sheaves', 'shed', 'sheddeth', 'sheep', 'sheepshearers', 'shekel', 'shekels', 'shepherd', 'shepherds', 'shew', 'shewed', 'sheweth', 'shield', 'ships', 'shoelatchet', 'shore', 'shortly', 'shot', 'should', 'shoulder', 'shoulders', 'shouldest', 'shrank', 'shrubs', 'shut', 'si', 'side', 'sight', 'signet', 'signs', 'silv', 'silver', 'sin', 'since', 'sinew', 'sinners', 'sinning', 'sir', 'sist', 'sister', 'sit', 'six', 'sixteen', 'sixth', 'sixty', 'skins', 'slain', 'slaughter', 'slay', 'slayeth', 'sle', 'sleep', 'slept', 'slew', 'slime', 'slimepits', 'small', 'smell', 'smelled', 'smite', 'smoke', 'smoking', 'smooth', 'smote', 'so', 'sod', 'softly', 'sojourn', 'sojourned', 'sojourner', 'sold', 'sole', 'solemnly', 'some', 'son', 'songs', 'sons', 'soon', 'sore', 'sorely', 'sorrow', 'sort', 'sou', 'sought', 'soul', 'souls', 'south', 'southward', 'sow', 'sowed', 'space', 'spake', 'spare', 'spe', 'speak', 'speaketh', 'speaking', 'speckl', 'speckled', 'spee', 'speech', 'speed', 'speedily', 'spent', 'spi', 'spicery', 'spices', 'spies', 'spilled', 'spirit', 'spoil', 'spoiled', 'spoken', 'sporting', 'spotted', 'spread', 'springing', 'sprung', 'staff', 'stalk', 'stand', 'standest', 'stars', 'state', 'statutes', 'stay', 'stayed', 'ste', 'stead', 'steal', 'steward', 'still', 'stink', 'sto', 'stole', 'stolen', 'stone', 'stones', 'stood', 'stooped', 'stopped', 'store', 'storehouses', 'stories', 'straitly', 'strakes', 'strange', 'stranger', 'strangers', 'straw', 'street', 'strength', 'strengthened', 'stretched', 'stricken', 'strife', 'stript', 'strive', 'strong', 'stronger', 'strove', 'struggled', 'stuff', 'subdue', 'submit', 'substance', 'subtil', 'subtilty', 'such', 'suck', 'suffered', 'summer', 'sun', 'supplanted', 'sure', 'surely', 'surety', 'sustained', 'sware', 'swear', 'sweat', 'sweet', 'sword', 'sworn', 'tabret', 'tak', 'take', 'taken', 'talked', 'talking', 'tar', 'tarried', 'tarry', 'teeth', 'tell', 'tempt', 'ten', 'tender', 'tenor', 'tent', 'tenth', 'tents', 'terror', 'th', 'than', 'that', 'the', 'thee', 'their', 'them', 'themselv', 'themselves', 'then', 'thence', 'there', 'thereby', 'therefore', 'therein', 'thereof', 'thereon', 'these', 'they', 'thi', 'thicket', 'thigh', 'thin', 'thine', 'thing', 'things', 'think', 'third', 'thirteen', 'thirteenth', 'thirty', 'this', 'thistles', 'thither', 'thoroughly', 'those', 'thou', 'though', 'thought', 'thoughts', 'thousand', 'thousands', 'thread', 'three', 'threescore', 'threshingfloor', 'throne', 'through', 'throughout', 'thus', 'thy', 'thyself', 'tidings', 'till', 'tiller', 'tillest', 'tim', 'time', 'times', 'tithes', 'to', 'togeth', 'together', 'toil', 'token', 'told', 'tongue', 'tongues', 'too', 'took', 'top', 'tops', 'torn', 'touch', 'touched', 'toucheth', 'touching', 'toward', 'tower', 'towns', 'tr', 'trade', 'traffick', 'trained', 'travail', 'travailed', 'treasure', 'tree', 'trees', 'trembled', 'trespass', 'tribes', 'tribute', 'troop', 'troubled', 'trough', 'troughs', 'tru', 'true', 'truly', 'truth', 'turn', 'turned', 'turtledove', 'twel', 'twelve', 'twentieth', 'twenty', 'twice', 'twins', 'two', 'unawares', 'uncircumcised', 'uncovered', 'under', 'understand', 'understood', 'ungirded', 'unit', 'unleavened', 'until', 'unto', 'up', 'upon', 'uppermost', 'upright', 'upward', 'urged', 'us', 'utmost', 'vagabond', 'vail', 'vale', 'valley', 'vengeance', 'venison', 'verified', 'verily', 'very', 'vessels', 'vestures', 'victuals', 'vine', 'vineyard', 'violence', 'violently', 'virgin', 'vision', 'visions', 'visit', 'visited', 'voi', 'voice', 'void', 'vow', 'vowed', 'vowedst', 'w', 'wa', 'wages', 'wagons', 'waited', 'walk', 'walked', 'walketh', 'walking', 'wall', 'wander', 'wandered', 'wandering', 'war', 'ward', 'was', 'wash', 'washed', 'wast', 'wat', 'watch', 'water', 'watered', 'watering', 'waters', 'waxed', 'waxen', 'way', 'ways', 'we', 'wealth', 'weaned', 'weapons', 'wearied', 'weary', 'week', 'weep', 'weig', 'weighed', 'weight', 'welfare', 'well', 'wells', 'went', 'wentest', 'wept', 'were', 'west', 'westwa', 'whales', 'what', 'whatsoever', 'wheat', 'whelp', 'when', 'whence', 'whensoever', 'where', 'whereby', 'wherefore', 'wherein', 'whereof', 'whereon', 'wherewith', 'whether', 'which', 'while', 'white', 'whither', 'who', 'whole', 'whom', 'whomsoever', 'whoredom', 'whose', 'whosoever', 'why', 'wi', 'wick', 'wicked', 'wickedly', 'wickedness', 'widow', 'widowhood', 'wife', 'wild', 'wilderness', 'will', 'willing', 'wilt', 'wind', 'window', 'windows', 'wine', 'winged', 'winter', 'wise', 'wit', 'with', 'withered', 'withheld', 'withhold', 'within', 'without', 'witness', 'wittingly', 'wiv', 'wives', 'wo', 'wolf', 'woman', 'womb', 'wombs', 'women', 'womenservan', 'womenservants', 'wondering', 'wood', 'wor', 'word', 'words', 'work', 'worse', 'worship', 'worshipped', 'worth', 'worthy', 'wot', 'wotteth', 'would', 'wouldest', 'wounding', 'wrapped', 'wrath', 'wrestled', 'wrestlings', 'wrong', 'wroth', 'wrought', 'y', 'ye', 'yea', 'year', 'yearn', 'years', 'yesternight', 'yet', 'yield', 'yielded', 'yielding', 'yoke', 'yonder', 'you', 'young', 'younge', 'younger', 'youngest', 'your', 'yourselves', 'youth']
+```
+```python
+# Entrada
+len(set(text3))
+```
+
+```python
+# Salida
+2789
+```
+
+```python
+# Entrada
+len(set(text3)) / len(text3)
+```
+
+```python
+# Salida
+0.06230453042623537
+```
+
+```python
+# Entrada
+text3.count("smote")
+```
+
+```python
+# Salida
+5
+```
+
+```python
+# Entrada
+100 * text4.count('a') / len(text4)
+```
+
+```python
+# Salida
+1.4569256756756757
+```
+```python
+# Entrada
+lexical_diversity(text3)
+```
+
+```python
+# Salida
+0.06230453042623537
+```
+
+```python
+# Entrada
+lexical_diversity(text5)
+```
+
+```python
+# Salida
+0.13477005109975562
+```
+
+```python
+# Entrada
+percentage(4, 5)
+```
+
+```python
+# Salida
+0.80
+```
+```python
+# Entrada
+percentage(text4.count('a'), len(text4))
+```
+
+```python
+# Salida
+1.4643016433938312
+```
+
 ## Ejercicios "Your turn"
 
 ### 1. Enter a few more expressions of your own. You can use asterisk (*) for multiplication and slash (/) for division, and parentheses for bracketing expressions.
