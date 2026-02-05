@@ -10,8 +10,6 @@ from nltk.stem.porter import PorterStemmer
 nltk.download('punkt_tab')
 # Descarga de WordNet para lematización.
 nltk.download('wordnet')
-# Descarga de stopwords
-nltk.download('stopwords')
 
 # Función para parsear documentos
 def parse_documents(input_file, output_file):
@@ -94,6 +92,11 @@ def parse_queries(input_file, output_file):
 
     print(f"Consultas parseadas: {len(results)}. Guardado en {output_file}")
 
+# Carga stopwords
+def load_stopwords(filepath):
+    with open(filepath, 'r', encoding='utf-8') as f:
+        return set(word.strip().lower() for word in f.readlines() if word.strip())
+
 
 def preprocess_text(text, re_punc, porter, snowball, lemmatizer, stopwords):
     # Procesamiento de texto
@@ -108,7 +111,7 @@ def preprocess_text(text, re_punc, porter, snowball, lemmatizer, stopwords):
     lowercase = [w.lower() for w in stripped if w.strip()]
 
     # Eliminar stopwords
-    no_stopwords = [w for w in lowercase if w and w not in stopwords]
+    no_stopwords = [w for w in lowercase if w not in stopwords]
 
     # Porter Stemming
     porter_stemmed = [porter.stem(w) for w in no_stopwords]
@@ -130,18 +133,17 @@ def preprocess_text(text, re_punc, porter, snowball, lemmatizer, stopwords):
     }
 
 
-def preprocess_file(input_file, output_prefix):
-    """
-    Preprocesa un archivo con formato: número | título | texto
-    Genera múltiples archivos de salida con diferentes procesamientos.
-    """
+def preprocess_file(input_file, output_prefix, stopwords_file='resources/CACM/common_words'):
+    # Preprocesa un archivo con formato: número | título | texto
+    # Genera múltiples archivos de salida con diferentes procesamientos.
+
     # Configuración de herramientas
     punctuation = string.punctuation + "'"
     re_punc = re.compile('[%s]' % re.escape(punctuation))
     porter = PorterStemmer()
     snowball = nltk.stem.SnowballStemmer('english')
     lemmatizer = nltk.WordNetLemmatizer()
-    stopwords = set(nltk.corpus.stopwords.words('english'))
+    stopwords = load_stopwords(stopwords_file)
 
     with open(input_file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -158,18 +160,18 @@ def preprocess_file(input_file, output_prefix):
     }
 
     for line in lines:
-        parts = line.strip().split(' | ')
-        if len(parts) >= 3:
+        parts = line.strip().split(' | ', 2)  # Máximo 3 partes
+        if len(parts) >= 1:
             num = parts[0]
-            titulo = parts[1]
-            texto = parts[2]
+            titulo = parts[1] if len(parts) > 1 else ""
+            texto = parts[2] if len(parts) > 2 else ""
 
-            # Preprocesar título
-            titulo_proc = preprocess_text(titulo, re_punc, porter, snowball, lemmatizer, stopwords)
-            # Preprocesar texto
-            texto_proc = preprocess_text(texto, re_punc, porter, snowball, lemmatizer, stopwords)
+            # Preprocesar título (puede estar vacío)
+            titulo_proc = preprocess_text(titulo, re_punc, porter, snowball, lemmatizer, stopwords) if titulo else {k: "" for k in results.keys()}
+            # Preprocesar texto (puede estar vacío)
+            texto_proc = preprocess_text(texto, re_punc, porter, snowball, lemmatizer, stopwords) if texto else {k: "" for k in results.keys()}
 
-            # Agregar a cada lista
+            # Agregar a cada lista - SIEMPRE, incluso si está vacío
             for key in results.keys():
                 results[key].append(f"{num} | {titulo_proc[key]} | {texto_proc[key]}")
 
