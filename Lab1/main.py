@@ -34,7 +34,7 @@ def main():
     with open('output/output_stripped.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(list(stripped)))
     # Imprime las primeras 100 palabras sin puntuación.
-    print(stripped)
+    print(stripped[:100])
     print("Puntuación eliminada. Guardado en output/output_stripped.txt")
 
     # Conversión a minúsculas.
@@ -47,7 +47,7 @@ def main():
     with open('output/output_lowercase.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(list(lw_text)))
     # Imprime las primeras 100 palabras en minúsculas.
-    print(lw_text)
+    print(lw_text[:100])
     print("Convertido a minúsculas. Guardado en output/output_lowercase.txt")
 
 
@@ -62,7 +62,7 @@ def main():
     with open('output/output_cats.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(list(cat_words)))
     # Imprime las primeras 100 palabras que contienen 'cat'.
-    print(cat_words)
+    print(cat_words[:100])
     print("Palabras que contienen 'cat' encontradas. Guardado en output/output_cats.txt")
 
 
