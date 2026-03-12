@@ -2,19 +2,20 @@ import string
 import nltk
 import re
 
-from nltk import WordNetLemmatizer
+from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
-
+from nltk.stem import SnowballStemmer
+from nltk.stem import WordNetLemmatizer
 
 # Descarga del paquete punkt_tab para tokenización.
 nltk.download('punkt_tab')
-# Descarga de WordNet para lematización.
-nltk.download('wordnet')
+# Descargar las palabras vacías
+nltk.download('stopwords')
+
 
 def main():
-
     # Carga del archivo txt.
-    with open('resources/2591-0.txt', encoding='utf-8', errors= 'ignore') as f:
+    with open('resources/2591-0.txt', encoding='utf-8', errors='ignore') as f:
         raw = f.read()
 
     # Tokenización y creación del objeto Text.
@@ -26,7 +27,6 @@ def main():
     # Imprime las primeras 100 palabras del texto.
     print(text[:100])
     print("Tokenizado completo. Guardado en output/output_original.txt")
-
 
     # Eliminacion de puntuación.
 
@@ -40,7 +40,7 @@ def main():
     with open('output/output_stripped.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(list(stripped)))
     # Imprime las primeras 100 palabras sin puntuación.
-    print(stripped[:100])
+    print(stripped)
     print("Puntuación eliminada. Guardado en output/output_stripped.txt")
 
     # Conversión a minúsculas.
@@ -53,9 +53,23 @@ def main():
     with open('output/output_lowercase.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(list(lw_text)))
     # Imprime las primeras 100 palabras en minúsculas.
-    print(lw_text[:100])
+    print(lw_text)
     print("Convertido a minúsculas. Guardado en output/output_lowercase.txt")
 
+    # Definir el idioma para identificar palabras vacias
+    idioma = 'english'
+    stop_words = set(stopwords.words(idioma))
+    # Eliminar palabras  vacias
+    filtered_text = [
+        w for w in lw_text
+        if w.isalpha() and w not in stop_words
+    ]
+    # Guardado sin palabras vacias
+    with open('output/output_no_stopwords.txt', 'w', encoding='utf-8') as f:
+        f.write('\n'.join(filtered_text))
+    # Imprime las primeras 100 palabras
+    print("\nPrimeras 100 palabras (sin stopwords):")
+    print(filtered_text[:100])
 
     # Ejemplo con re.
 
@@ -63,52 +77,47 @@ def main():
     cat_words_re = re.compile(r'.*cat.*')
     # Filtrado de palabras que coinciden con la expresión regular
     # 'cat' dentro del array de minusculas.
-    cat_words = [w for w in lw_text if cat_words_re.match(w)]
+    cat_words = [w for w in filtered_text if cat_words_re.match(w)]
     # Guardado de las palabras que contienen 'cat' en un archivo.
     with open('output/output_cats.txt', 'w', encoding='utf-8') as f:
         f.write('\n'.join(list(cat_words)))
     # Imprime las primeras 100 palabras que contienen 'cat'.
-    print(cat_words[:100])
+    print(cat_words)
     print("Palabras que contienen 'cat' encontradas. Guardado en output/output_cats.txt")
 
-
     # Porter Stemming
-    # Algoritmo basado en reglas para reducir las palabras a su raíz.
+
     porter = PorterStemmer()
-    # Aplicación del stemming a las palabras en minúsculas.
-    porter_stemmed = [porter.stem(word) for word in lw_text]
-    # Guardado de las palabras con Porter Stemming en un archivo.
-    with open('output/output_porter_stemmed.txt', 'w', encoding='utf-8') as f:
-        f.write('\n'.join(list(porter_stemmed)))
-    # Imprime las primeras 100 palabras con Porter Stemming.
-    print(porter_stemmed[:100])
-    print("Porter Stemming aplicado. Guardado en output/output_porter_stemmed.txt")
+    porter_words = [porter.stem(w) for w in filtered_text]
+    # Guardado de las palabras en un archivo.
+    with open('output/output_porter.txt', 'w', encoding='utf-8') as f:
+        f.write('\n'.join(porter_words))
+    # Imprime las primeras 100 palabras con Porter Stemmer.
+    print("\nPrimeras 100 palabras con Porter Stemmer:")
+    print(porter_words[:100])
 
     # Snowball Stemming
-    snowball = nltk.stem.SnowballStemmer('english')
-    # Aplicación del stemming a las palabras en minúsculas.
-    snowball_stemmed = [snowball.stem(word) for word in lw_text]
-    # Guardado de las palabras con Snowball Stemming en un archivo.
-    with open('output/output_snowball_stemmed.txt', 'w', encoding='utf-8') as f:
-        f.write('\n'.join(list(snowball_stemmed)))
-    # Imprime las primeras 100 palabras con Snowball Stemming.
-    print(snowball_stemmed[:100])
-    print("Snowball Stemming aplicado. Guardado en output/output_snowball_stemmed.txt")
+    snowball = SnowballStemmer("english")
+    snowball_words = [snowball.stem(w) for w in filtered_text]
+    # Guardado de las palabras en un archivo.
+    with open('output/output_snowball.txt', 'w', encoding='utf-8') as f:
+        f.write('\n'.join(snowball_words))
+    # Imprime las primeras 100 palabras con Porter Stemmer.
+    print("\nPrimeras 100 palabras con Snowball Stemmer:")
+    print(snowball_words[:100])
 
-    # WordNet Lemmatization
-    lemmatizer = nltk.WordNetLemmatizer()
-    # Aplicación de la lematización a las palabras en minúsculas.
-    lemmatized = [lemmatizer.lemmatize(word, pos='v') for word in lw_text]
-    # Guardado de las palabras lematizadas en un archivo.
-    with open('output/output_lemmatized.txt', 'w', encoding='utf-8') as f:
-        f.write('\n'.join(list(lemmatized)))
-    # Imprime las primeras 100 palabras lematizadas.
-    print(lemmatized[:100])
-    print("Lematización aplicada. Guardado en output/output_lemmatized.txt")
+    # WordNet Lemmatizer
+    lemmatizer = WordNetLemmatizer()
+    lemma_words = [lemmatizer.lemmatize(w) for w in filtered_text]
+    # Guardado de las palabras en un archivo.
+    with open('output/output_lemmatizer.txt', 'w', encoding='utf-8') as f:
+        f.write('\n'.join(lemma_words))
+    # Imprime las primeras 100 palabras con Porter Stemmer.
+    print("\nPrimeras 100 palabras con WordNet Lemmatizer:")
+    print(lemma_words[:100])
 
-
+    print("\nPreprocesamiento completo terminado.")
 
 
 if __name__ == '__main__':
-        main()
-
+    main()
