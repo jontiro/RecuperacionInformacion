@@ -101,6 +101,9 @@ def load_stopwords(filepath):
 def preprocess_text(text, re_punc, porter, snowball, lemmatizer, stopwords):
     # Procesamiento de texto
 
+    # Reemplazar guiones con espacios
+    text = text.replace('-', ' ')
+
     # Tokenizar
     tokens = nltk.word_tokenize(text)
 
@@ -110,8 +113,11 @@ def preprocess_text(text, re_punc, porter, snowball, lemmatizer, stopwords):
     # Convertir a minúsculas y filtrar vacíos
     lowercase = [w.lower() for w in stripped if w.strip()]
 
+    # Filtrar números (eliminar tokens que contengan cualquier dígito)
+    no_numbers = [w for w in lowercase if not any(char.isdigit() for char in w)]
+
     # Eliminar stopwords
-    no_stopwords = [w for w in lowercase if w not in stopwords]
+    no_stopwords = [w for w in no_numbers if w not in stopwords]
 
     # Porter Stemming
     porter_stemmed = [porter.stem(w) for w in no_stopwords]
@@ -126,6 +132,7 @@ def preprocess_text(text, re_punc, porter, snowball, lemmatizer, stopwords):
         'tokens': ' '.join(tokens),
         'stripped': ' '.join(stripped),
         'lowercase': ' '.join(lowercase),
+        'no_numbers': ' '.join(no_numbers),
         'no_stopwords': ' '.join(no_stopwords),
         'porter': ' '.join(porter_stemmed),
         'snowball': ' '.join(snowball_stemmed),
@@ -153,6 +160,7 @@ def preprocess_file(input_file, output_prefix, stopwords_file='resources/CACM/co
         'tokens': [],
         'stripped': [],
         'lowercase': [],
+        'no_numbers': [],
         'no_stopwords': [],
         'porter': [],
         'snowball': [],
@@ -218,6 +226,7 @@ def main():
     print("    - documentos_tokens.txt")
     print("    - documentos_stripped.txt (sin puntuación)")
     print("    - documentos_lowercase.txt (minúsculas)")
+    print("    - documentos_no_numbers.txt (sin tokens que contengan números)")
     print("    - documentos_no_stopwords.txt (sin stopwords)")
     print("    - documentos_porter.txt (Porter Stemming)")
     print("    - documentos_snowball.txt (Snowball Stemming)")
@@ -227,6 +236,7 @@ def main():
     print("    - consultas_tokens.txt")
     print("    - consultas_stripped.txt (sin puntuación)")
     print("    - consultas_lowercase.txt (minúsculas)")
+    print("    - consultas_no_numbers.txt (sin tokens que contengan números)")
     print("    - consultas_no_stopwords.txt (sin stopwords)")
     print("    - consultas_porter.txt (Porter Stemming)")
     print("    - consultas_snowball.txt (Snowball Stemming)")

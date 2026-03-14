@@ -34,7 +34,7 @@ from collections import Counter
 # Configuración de rutas
 # ---------------------------------------------------------------------------
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-INPUT_FILE = os.path.join(BASE_DIR, 'Lab3', 'output', 'docs', 'documentos_no_stopwords.txt')
+INPUT_FILE = os.path.join(BASE_DIR, 'Lab3', 'output', 'docs', 'documentos_snowball.txt')
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), 'output', 'vocabulary')
 VOCAB_FILE = os.path.join(OUTPUT_DIR, 'vocabulario.txt')
 VOCAB_RED_FILE = os.path.join(OUTPUT_DIR, 'vocabularioReducido.txt')
@@ -100,7 +100,7 @@ def load_documents(filepath: str):
 def build_vocabulary(term_freq: Counter) -> list:
     """
     Construye el vocabulario completo: conjunto de términos únicos
-    ordenados alfabéticamente.
+    ordenados alfabéticamente, excluyendo números puros.
 
     Parámetros
     ----------
@@ -110,9 +110,18 @@ def build_vocabulary(term_freq: Counter) -> list:
     Retorna
     -------
     list
-        Lista de términos únicos ordenados alfabéticamente.
+        Lista de términos únicos ordenados alfabéticamente (sin números).
     """
-    vocab = sorted(term for term in term_freq if term.strip())
+    def is_not_number(term):
+        """Verifica si un término NO es un número puro."""
+        try:
+            float(term)
+            return False  # Es un número, lo excluimos
+        except ValueError:
+            return True   # No es un número, lo mantenemos
+
+    vocab = sorted(term for term in term_freq
+                   if term.strip() and is_not_number(term.strip()))
     return vocab
 
 
@@ -133,6 +142,8 @@ def reduce_vocabulary(doc_freq: Counter, total_docs: int,
                                para conectar documentos con consultas de forma
                                confiable, por lo que sí se descartan.
 
+    Adicionalmente, se filtran los números puros del vocabulario.
+
     Parámetros
     ----------
     doc_freq     : Counter — document frequency de cada término.
@@ -146,16 +157,24 @@ def reduce_vocabulary(doc_freq: Counter, total_docs: int,
         vocab_reducido — términos en rango normal, ordenados alfabéticamente.
         vocab_alto_df  — términos de alto DF, ordenados alfabéticamente.
     """
+    def is_not_number(term):
+        """Verifica si un término NO es un número puro."""
+        try:
+            float(term)
+            return False  # Es un número, lo excluimos
+        except ValueError:
+            return True   # No es un número, lo mantenemos
+
     max_df = int(max_df_ratio * total_docs)
 
     vocab_reducido = sorted(
         term for term, df in doc_freq.items()
-        if min_df <= df <= max_df and term.strip()
+        if min_df <= df <= max_df and term.strip() and is_not_number(term.strip())
     )
 
     vocab_alto_df = sorted(
         term for term, df in doc_freq.items()
-        if df > max_df and term.strip()
+        if df > max_df and term.strip() and is_not_number(term.strip())
     )
 
     return vocab_reducido, vocab_alto_df
