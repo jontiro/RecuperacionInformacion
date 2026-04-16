@@ -157,7 +157,7 @@ def calcular_metricas1(qid, docs_recuperados_z, docs_relevantes):
     }
 
 
-def calcular_metricas(qid, docs_recuperados_z, docs_relevantes):
+def calcular_metricas2(qid, docs_recuperados_z, docs_relevantes):
     """
     Calcula las métricas para una consulta.
     """
@@ -204,6 +204,56 @@ def calcular_metricas(qid, docs_recuperados_z, docs_relevantes):
         'medida_f': medida_f,
         'precision_r': precision_r
     }
+
+
+def calcular_metricas(qid, docs_recuperados_z, docs_relevantes):
+    """
+    Calcula las métricas para una consulta.
+    """
+    # Total de documentos relevantes (R)
+    total_relevantes = len(docs_relevantes)
+
+    # Número de documentos recuperados (Z)
+    num_recuperados = len(docs_recuperados_z)
+
+    # Calcular precisión iterativamente en cada posición
+    precision_por_posicion = []
+    rel_cnt = 0
+
+    for pos, doc in enumerate(docs_recuperados_z, start=1):
+        if doc in docs_relevantes:
+            rel_cnt += 1
+        precision_actual = rel_cnt / pos
+        precision_por_posicion.append(precision_actual)
+
+    # Precisión final (en la última posición Z)
+    precision = precision_por_posicion[-1] if precision_por_posicion else 0.0
+
+    # Recuerdo: relevantes_recuperados (rel_cnt) / total_relevantes
+    recuerdo = rel_cnt / total_relevantes if total_relevantes > 0 else 0.0
+
+    # Medida F: Media armónica
+    if precision + recuerdo > 0:
+        medida_f = 2 * (precision * recuerdo) / (precision + recuerdo)
+    else:
+        medida_f = 0.0
+
+    # Precisión R: Precisión en la posición R (primeros R documentos recuperados)
+    # donde R = total_relevantes
+    if total_relevantes > 0:
+        relevantes_en_R = sum(1 for doc in docs_recuperados_z[:total_relevantes] if doc in docs_relevantes)
+        precision_r = relevantes_en_R / total_relevantes
+    else:
+        precision_r = 0.0
+
+    return {
+        'precision_por_posicion': precision_por_posicion,
+        'precision': precision,
+        'recuerdo': recuerdo,
+        'medida_f': medida_f,
+        'precision_r': precision_r
+    }
+
 
 # ---------------------------------------------------------
 # 4. Procesar todas las consultas

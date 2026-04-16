@@ -41,8 +41,8 @@ VOCAB_RED_FILE = os.path.join(OUTPUT_DIR, 'vocabularioReducido.txt')
 VOCAB_ALTO_DF_FILE = os.path.join(OUTPUT_DIR, 'vocabularioAltoDF.txt')
 
 # Parámetros de reducción por Document Frequency
-MIN_DF       = 2      # Piso : término debe aparecer en al menos 2 documentos distintos
-MAX_DF_RATIO = 0.80   # Techo: término no debe aparecer en más del 80% de los documentos
+MIN_DF       = 2    # Piso : término debe aparecer en al menos 2 documentos distintos
+MAX_DF_RATIO = 0.9   # Techo: término no debe aparecer en más del 80% de los documentos
 
 
 def load_documents(filepath: str):

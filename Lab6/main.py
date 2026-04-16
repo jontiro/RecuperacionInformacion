@@ -89,7 +89,7 @@ def generar_resultados(matriz_docs, matriz_queries, nombre_archivo):
 
             # Escribe en formato QID, DocID, Similitud
             for doc_id, sim in sims:
-                f.write(f"{i+1:03d} {doc_id} {sim:.4f}\n")
+                f.write(f"{i+1:02d} {doc_id} {sim:.4f}\n")
 
     print(f"  Guardado: {nombre_archivo}")
 
