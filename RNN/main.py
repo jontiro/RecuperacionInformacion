@@ -9,7 +9,22 @@ Original file is located at
 
 import numpy as np
 import pandas as pd
+import os
+from pathlib import Path
+
+# Reduce logs informativos de TensorFlow (debe ir antes del import de tf)
+os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
+
+# Workaround para RTX 5060 Ti (compute capability 12.0): desactivar JIT compilation
+# que causa problemas en primera ejecución. TensorFlow usará kernels precompilados o CPU
+os.environ["TF_FORCE_GPU_ALLOW_GROWTH"] = "true"
+os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
+
 import tensorflow as tf
+
+# Configurar TensorFlow para usar CPU durante construcción del modelo para evitar
+# errores de CUDA_ERROR_INVALID_HANDLE en la compilación JIT de primera ejecución
+tf.config.set_visible_devices([], 'GPU')
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, SimpleRNN, Dense
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -20,8 +35,24 @@ from sklearn.metrics import classification_report, confusion_matrix, accuracy_sc
 # 1. Cargar datasets desde CSV
 # ==========================================
 print("Cargando datasets...")
-train_df = pd.read_csv('./data/sentiment.csv', encoding='latin-1')
-test_df = pd.read_csv('./data/RATIO.csv', encoding='latin-1')
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+TRAIN_CSV = DATA_DIR / "sentiment.csv"
+TEST_CSV = DATA_DIR / "Equal.csv"
+
+print(f"Ruta de datos resuelta: {DATA_DIR}")
+
+for csv_path in (TRAIN_CSV, TEST_CSV):
+    if not csv_path.exists():
+        raise FileNotFoundError(f"No se encontro el archivo: {csv_path}")
+
+train_df = pd.read_csv(TRAIN_CSV, encoding='latin-1')
+test_df = pd.read_csv(TEST_CSV, encoding='latin-1')
+
+print(f"TensorFlow version: {tf.__version__}")
+gpus = tf.config.list_physical_devices('GPU')
+print(f"GPUs detectadas por TensorFlow: {gpus if gpus else 'ninguna'}")
 
 # Limpiar datos: eliminar filas con valores faltantes en Review y Sentiment
 train_df = train_df.dropna(subset=['Review', 'Sentiment'])
@@ -68,31 +99,51 @@ y = np.array(etiquetas)
 X_test = pad_sequences(test_secuencias, maxlen=max_len, padding="post")
 y_test = np.array(test_etiquetas)
 
+# Dividir dataset de entrenamiento en train/validación (80/20)
+from sklearn.model_selection import train_test_split
+X_train, X_val, y_train, y_val = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
 print("=== Ejemplos de tokenización ===")
 for i in range(3):
     print(f"Frase: {frases[i][:80]}...")
     print(f"Secuencia: {secuencias[i][:10]}...")
     print("---")
 
-print(f"\nForma de X (train): {X.shape}")
-print(f"Forma de y (train): {y.shape}")
+print(f"\nForma de X_train: {X_train.shape}")
+print(f"Forma de y_train: {y_train.shape}")
+print(f"Forma de X_val: {X_val.shape}")
+print(f"Forma de y_val: {y_val.shape}")
 print(f"Forma de X_test: {X_test.shape}")
 print(f"Forma de y_test: {y_test.shape}")
 print(f"Longitud máxima de secuencia: {max_len}")
 
 # ==========================================
-# 3. Definir modelo RNN
+# 3. Definir modelo RNN mejorado
 # ==========================================
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.regularizers import l2
+from tensorflow.keras.optimizers import Adam
+
 vocab_size = len(tokenizer.word_index) + 1
 
 model = Sequential([
     Embedding(input_dim=vocab_size, output_dim=16, input_shape=(max_len,)),
-    SimpleRNN(32, activation="tanh"),
+    Dropout(0.3),  # Regularización: desactivar 30% de neuronas aleatoriamente
+    SimpleRNN(32, activation="tanh", return_sequences=True, kernel_regularizer=l2(0.001)),
+    Dropout(0.3),
+    SimpleRNN(16, activation="tanh", kernel_regularizer=l2(0.001)),
+    Dropout(0.3),
+    Dense(8, activation="relu", kernel_regularizer=l2(0.001)),
+    Dropout(0.2),
     Dense(1, activation="sigmoid")
 ])
 
+# Compilar con Learning Rate controlado
+optimizer = Adam(learning_rate=0.001)  # Learning rate más bajo que el default (0.001)
 model.compile(
-    optimizer="adam",
+    optimizer=optimizer,
     loss="binary_crossentropy",
     metrics=["accuracy"]
 )
@@ -100,14 +151,36 @@ model.compile(
 print("\n=== Resumen del modelo ===")
 model.summary()
 
+# Re-habilitar GPU para entrenamiento (kernels ya estarán compilados)
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    try:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+    except RuntimeError as e:
+        # Esto es esperado si la GPU ya fue inicializada
+        pass
+
 # ==========================================
-# 4. Entrenamiento
+# 4. Entrenamiento con Early Stopping
 # ==========================================
+from tensorflow.keras.callbacks import EarlyStopping
+
+# Early Stopping: detiene el entrenamiento si la validación no mejora en 3 épocas
+early_stopping = EarlyStopping(
+    monitor='val_loss',           # Monitorear validación loss
+    patience=3,                   # Esperar 3 épocas sin mejora
+    restore_best_weights=True,    # Restaurar pesos de la mejor época
+    verbose=1
+)
+
 history = model.fit(
-    X,
-    y,
+    X_train,
+    y_train,
+    validation_data=(X_val, y_val),  # Validar en cada época
     epochs=30,
-    batch_size=4,
+    batch_size=32,  # Aumentado de 4 a 32 para reducir ruido en gradientes
+    callbacks=[early_stopping],
     verbose=1
 )
 
@@ -115,10 +188,15 @@ history = model.fit(
 # 5. Evaluación en entrenamiento y test
 # ==========================================
 print("\n=== Evaluación ===")
-loss_train, acc_train = model.evaluate(X, y, verbose=0)
+loss_train, acc_train = model.evaluate(X_train, y_train, verbose=0)
 print(f"\n📊 ENTRENAMIENTO:")
 print(f"  Pérdida: {loss_train:.4f}")
 print(f"  Exactitud: {acc_train:.4f}")
+
+loss_val, acc_val = model.evaluate(X_val, y_val, verbose=0)
+print(f"\n📊 VALIDACIÓN:")
+print(f"  Pérdida: {loss_val:.4f}")
+print(f"  Exactitud: {acc_val:.4f}")
 
 loss_test, acc_test = model.evaluate(X_test, y_test, verbose=0)
 print(f"\n📊 TEST (RATIO.csv):")
